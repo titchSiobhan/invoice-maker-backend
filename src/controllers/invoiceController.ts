@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 
 async function createInvoice(req: Request, res: Response) {
-    const { taskIds } = req.body;
+    const { taskIds, jobIds } = req.body;
 
     const uniqueTaskIds = [...new Set(taskIds)];
 
@@ -14,6 +14,13 @@ async function createInvoice(req: Request, res: Response) {
                 create: uniqueTaskIds.map((taskId) => ({
                     task: { connect: { id: taskId as string } }
                 }))
+            },
+            jobs: {
+                create: [{
+                    job: {
+                        connect: { id: jobIds as string }
+                    }
+                }]
             }
         },
         include: {
@@ -42,7 +49,7 @@ async function getInvoices(req: Request, res: Response) {
 
     const formattedInvoices = invoices.map(inv => ({
         ...inv,
-        formattedDate: format(inv.dateCreated, "dd/MM/yyyy")
+        formattedDate: format(inv.dateCreated, "yyyy/MM/dd/hh/mm")
     }));
 
     res.json(formattedInvoices);
@@ -61,6 +68,11 @@ async function getSingleInvoice(req: Request<{ id: string }>, res: Response) {
                 include: {
                     task: true
                 }
+            },
+            jobs: {
+                include: {
+                    job: true
+                }
             }
         }
     });
@@ -70,7 +82,7 @@ async function getSingleInvoice(req: Request<{ id: string }>, res: Response) {
     }
     res.json({
     ...invoice,
-    formattedDate: format(invoice.dateCreated, "dd/MM/yyyy")
+    formattedDate: format(invoice.dateCreated, "yy/MM/dd/hh/mm")
 });
 }
 

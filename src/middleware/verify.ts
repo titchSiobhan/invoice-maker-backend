@@ -1,25 +1,39 @@
 import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
+import "../types/express.d.ts";
+import prisma from "../lib/prisma.js";
 
-function verifyToken(req: Request, res: Response, next: NextFunction) {
-    const bearerHeader = req.headers["authorization"];
+interface JWTpayload {
+    sub: string;
+}
+ async function verifyToken(req: Request, res: Response, next: NextFunction) {
 
-    if (!bearerHeader) {
-        console.log("no bearer header");
-        return res.status(401).json({ message: "Unauthorized" });
+
+    const token = req.cookies.accessToken;
+    if (!token) {
+        req.user = undefined;
+        return res.status(401).json({ message: "no token verify.ts" });
     }
 
-    const token = bearerHeader.split(" ")[1];
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JWTpayload;
 
-        // Your token payload is: { user: { id: ... } }
-        req.user = (decoded as any).user;
+        
+       const user = await prisma.user.findUnique({
+           where: {
+            id: decoded.sub
+           }
+       })
+       if (!user) {
+        req.user = undefined;
+        return res.status(401).json({ message: "Unauthorized" });
+       }
+       req.user = user;
 
         next();
     } catch (err) {
         console.log("invalid token");
+        req.user  = undefined;
         return res.status(401).json({ message: "Unauthorized" });
     }
 }

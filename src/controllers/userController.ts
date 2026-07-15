@@ -2,19 +2,11 @@ import type { Request, Response } from 'express';
 import prisma from '../lib/prisma.js';
 
 
-export type User = {
-    id: string ;
-    email: string;
-    firstName: string;
-    lastName: string;
-    position: string | null;
-    company: any;
-    tasks: any;
-}
+
 async function getUser(req: Request<{ id: string }>, res: Response) {
 	const id = req.params.id;
 
-	const user = await prisma.users.findUnique({ 
+	const user = await prisma.user.findUnique({ 
         where: { 
             id,
 
@@ -32,9 +24,9 @@ async function getUser(req: Request<{ id: string }>, res: Response) {
 }
 
 async function addCompany(req: Request, res: Response) {
-   const userId = req.user!.id;
+    const userId = (req.user as { id: string } | undefined)?.id!;
     const { companyId } = req.body;
-    const userUpdated = await prisma.users.update({
+    const userUpdated = await prisma.user.update({
         where: {
             id: userId
         },
@@ -52,9 +44,9 @@ async function addCompany(req: Request, res: Response) {
 }
 
 async function removeCompany(req: Request, res: Response) {
-    const userId = req.user!.id;
+    const userId = (req.user as { id: string } | undefined)?.id!;
     const { companyId } = req.body;
-    const userUpdated = await prisma.users.update({
+    const userUpdated = await prisma.user.update({
         where: {
             id: userId
         },

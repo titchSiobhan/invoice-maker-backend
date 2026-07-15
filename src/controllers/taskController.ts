@@ -4,12 +4,11 @@ import prisma from '../lib/prisma.js';
 async function createTask(req: Request, res: Response) {
     const { title, description,  pricePerUnit, category, company } = req.body;
     const user = req.user;
-const userId = typeof user === 'string' ? user : user?.id;
-console.log(userId)
-console.log(user)
-if (!userId) {
-    return res.status(400).json({ message: 'User ID is required' });
-}
+    const userId = typeof user === 'string' ? user : (user as { id?: string })?.id;
+   
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
 
     const task = await prisma.tasks.create({
         data: {
@@ -50,7 +49,11 @@ async function editTask(req: Request<{ id: string }>, res: Response) {
 }
 
 async function getTasks(req: Request, res: Response) {
-    const tasks = await prisma.tasks.findMany();
+    const tasks = await prisma.tasks.findMany({
+       where: {
+            userId: (req.user as { id: string }).id
+        }
+    });
     res.json(tasks);
 }
 

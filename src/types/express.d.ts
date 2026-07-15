@@ -1,11 +1,16 @@
-import "express";
+import { Prisma } from "@prisma/client";
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: {
-      id: string;
-      email: string;
-      // add anything else your JWT stores
-    };
+type User = Prisma.UserGetPayload<{}>;
+
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User | null;
+    }
   }
 }
+
+
+
+export {};
