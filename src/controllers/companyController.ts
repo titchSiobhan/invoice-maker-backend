@@ -3,15 +3,20 @@ import prisma from '../lib/prisma.js';
 
 
 async function createCompany(req: Request, res: Response) {
-    const { name} = req.body;
-    const user = req.user;
+    const {companyName, email, phoneNumber, accountNumber, sortCode, accountName} = req.body;
+    
     
     const company = await prisma.company.create({
         data: {
-            companyName: name,
+            companyName,
+            email,
+            phoneNumber,
+            accountNumber,
+            sortCode,
+            accountName,
             users: {
                 connect: {
-                    id: user!.id,
+                    id:  (req.user as { id: string }).id
                 },
             },
         },

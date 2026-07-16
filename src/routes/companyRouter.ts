@@ -1,3 +1,4 @@
+
 import { Router } from 'express';
 import * as companyController from '../controllers/companyController.js';
 import verifyToken from '../middleware/verify.js';

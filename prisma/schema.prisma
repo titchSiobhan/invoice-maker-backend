@@ -32,6 +32,11 @@ model Company {
   companyName       String
   companyImageLarge String?
   companyImageSmall String?
+  email   String
+  phoneNumber  String
+  sortCode  String?
+  accountNumber  String?
+  accountName  String?
   users             User[]
   tasks             Tasks[]
  
@@ -54,10 +59,9 @@ model Tasks {
 model Jobs {
   id       String        @id @default(uuid())
   name     String
-  address  String?
-  jobStart DateTime?
-  endDate  DateTime?
-  status   String?
+  street  String
+  town  String
+  postcode  String
   tasks    JobTasks[]
   invoices InvoiceJobs[]
    user         User?          @relation(fields: [userId], references: [id])

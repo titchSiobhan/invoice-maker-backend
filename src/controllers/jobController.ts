@@ -39,14 +39,14 @@ async function deleteJob(req: Request<{ id: string }>, res: Response) {
 }
 
 async function createJob(req: Request, res: Response) {
-    const { name, address, jobStart, endDate, status } = req.body;
+    const { name, street, town, postcode} = req.body;
     const job = await prisma.jobs.create({
         data: {
             name,
-            address: address || null,
-            jobStart: jobStart || null,
-            endDate: endDate || null,
-            status: status || null,
+            street,
+            town,
+            postcode,
+            
             userId: (req.user as { id: string }).id
         }
     });
@@ -55,17 +55,16 @@ async function createJob(req: Request, res: Response) {
 
 async function updateJob(req: Request<{id: string}>, res: Response) {
     const { id } = req.params;
-    const { name, address, jobStart, endDate, status } = req.body;
+    const { name, street, town, postcode } = req.body;
     const job = await prisma.jobs.update({
         where: {
             id
         },
         data: {
             name,
-            address: address || null,
-            jobStart: jobStart || null,
-            endDate: endDate || null,
-            status: status || null
+            town,
+            postcode,
+            street
         }
     });
     res.json(job);
