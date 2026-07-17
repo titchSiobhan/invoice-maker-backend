@@ -10,9 +10,13 @@ import './middleware/passport.js';
 
 import passport from 'passport';
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
+import path from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
-
+app.use("/uploads", cors(), express.static(path.join(__dirname,  "uploads")));
 app.use(cookieParser());
 
 const corsOptions = {
@@ -31,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
 
 app.use('/api/auth', authRouter);
 app.use('/api/company', companyRouter);

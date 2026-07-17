@@ -2,6 +2,8 @@ import type { Request, Response } from 'express';
 import prisma from '../lib/prisma.js';
 
 
+
+
 async function createCompany(req: Request, res: Response) {
     const {companyName, email, phoneNumber, accountNumber, sortCode, accountName} = req.body;
     
@@ -48,18 +50,50 @@ async function createCompany(req: Request, res: Response) {
         res.json(company);
     }
 
+    
+
+
+async function uploadImage(req: Request<{id: string }>, res: Response) {
+  const { id } = req.params;
+  
+  try {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  
+    const company = await prisma.company.update({
+      where: {
+        id
+      },
+      data: {
+        companyImageLarge: req.file.filename
+      }
+    });
+    res.json({ company, message: "Image uploaded successfully" });
+    console.log('image uploaded');
+  console.log("FILE SAVED TO:", req.file?.path);
+
+} catch (error) {
+  console.log(error);
+}}
     async function updateCompany(req: Request<{ id: string }>, res: Response) {
         const { id } = req.params;
-        const { name } = req.body;
+        const { companyName, email, phoneNumber, accountNumber, sortCode, accountName  } = req.body;
         const company = await prisma.company.update({
             where: {
                 id,
             },
             data: {
-                companyName: name,
+                companyName,
+                email,
+                phoneNumber,
+                accountNumber,
+                sortCode,
+                accountName
+
             },
         });
         res.json({ company, message: 'Company updated successfully' });
     }
 
-    export { createCompany, getCompanies, getCompany, updateCompany };
+    export { createCompany, getCompanies, getCompany, updateCompany, uploadImage };
