@@ -6,11 +6,21 @@ import { format } from 'date-fns';
 async function createInvoice(req: Request, res: Response) {
     const { tasks, jobIds, dateCreated } = req.body;
 
-    const uniqueTaskIds = [...new Set(tasks)];
+   
+    const now = new Date();
+
+const invoiceNumber =
+  now.getFullYear().toString() +
+  String(now.getMonth() + 1).padStart(2, "0") +
+  String(now.getDate()).padStart(2, "0") +
+  String(now.getHours()).padStart(2, "0") +
+  String(now.getMinutes()).padStart(2, "0");
+
 
     const invoice = await prisma.invoice.create({
         data: {
             dateCreated: dateCreated ? new Date(dateCreated) : undefined,
+            invoiceNumber,
             tasks: {
                 create: tasks.map((t: any) => ({
                     quantity: t.quantity,

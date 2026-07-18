@@ -46,7 +46,8 @@ model Company {
 model Tasks {
   id           String         @id @default(uuid())
   title        String
-  description  String
+  description  String[]
+  privateDescription  String?
   pricePerUnit Decimal        @db.Decimal(6, 2)
   category     String
   jobs         JobTasks[]
@@ -60,8 +61,8 @@ model Tasks {
 model Jobs {
   id       String        @id @default(uuid())
   name     String
-  street  String
-  town  String
+  street  String[]
+  town  String[]
   postcode  String
   tasks    JobTasks[]
   invoices InvoiceJobs[]
@@ -72,7 +73,7 @@ model Jobs {
 
 model Invoice {
   id            String         @id @default(uuid())
-  invoiceNumber  DateTime       @default(now())
+  invoiceNumber  String
   dateCreated   DateTime       @default(now())
   jobs          InvoiceJobs[]
   tasks         InvoiceTasks[]

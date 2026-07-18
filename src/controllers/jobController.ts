@@ -40,11 +40,20 @@ async function deleteJob(req: Request<{ id: string }>, res: Response) {
 
 async function createJob(req: Request, res: Response) {
     const { name, street, town, postcode} = req.body;
+     const townArray = town
+    .split(',')
+    .map((  item: string)=> item.trim())
+    .filter(Boolean);
+
+     const streetArray = street
+    .split(',')
+    .map((  item: string)=> item.trim())
+    .filter(Boolean);
     const job = await prisma.jobs.create({
         data: {
             name,
-            street,
-            town,
+            street: streetArray,
+            town: townArray,
             postcode,
             
             userId: (req.user as { id: string }).id

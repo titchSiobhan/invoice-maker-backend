@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: (req: any, file: Express.Multer.File, cb: (error: Error | null, destination?: string) => void) => {
-    cb(null, path.join(__dirname, "..", "uploads"));
+    cb(null, path.join(__dirname,  "uploads"));
   },
   filename: (req: any, file: Express.Multer.File, cb: (error: Error | null, filename?: string) => void) => {
     cb(null, Date.now() + "-" + file.originalname);

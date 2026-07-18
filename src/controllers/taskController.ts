@@ -2,18 +2,23 @@ import type { Request, Response } from 'express';
 import prisma from '../lib/prisma.js';
 
 async function createTask(req: Request, res: Response) {
-    const { title, description,  pricePerUnit, category, company } = req.body;
+    const { title, description,  pricePerUnit, category, company, privateDescription } = req.body;
     const user = req.user;
     const userId = typeof user === 'string' ? user : (user as { id?: string })?.id;
    
     if (!userId) {
         return res.status(400).json({ message: 'User ID is required' });
     }
+      const descriptionArray = description
+    .split(',')
+    .map((  item: string)=> item.trim())
+    .filter(Boolean);
 
     const task = await prisma.tasks.create({
         data: {
             title,
-            description,
+            description: descriptionArray,
+            privateDescription,
             user: {
                 connect: {
                     id: userId,
@@ -31,15 +36,20 @@ async function createTask(req: Request, res: Response) {
 
 async function editTask(req: Request<{ id: string }>, res: Response) {
 
-    const {title, description, pricePerUnit, category, company} = req.body;
+    const {title, description, privateDescription, pricePerUnit, category, company} = req.body;
     const { id } = req.params;
+     const descriptionArray = description
+    .split(',')
+    .map((  item: string)=> item.trim())
+    .filter(Boolean);
     const task = await prisma.tasks.update({
         where: {
             id: id,
         },
         data: {
             title,
-            description,
+            description: descriptionArray,
+            privateDescription,
             pricePerUnit,
             category,
             company: company ? { connect: { id: company } } : undefined,
