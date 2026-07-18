@@ -4,24 +4,28 @@ import { format } from 'date-fns';
 
 
 async function createInvoice(req: Request, res: Response) {
-    const { taskIds, jobIds } = req.body;
+    const { tasks, jobIds, dateCreated } = req.body;
 
-    const uniqueTaskIds = [...new Set(taskIds)];
+    const uniqueTaskIds = [...new Set(tasks)];
 
     const invoice = await prisma.invoice.create({
         data: {
+            dateCreated: dateCreated ? new Date(dateCreated) : undefined,
             tasks: {
-                create: uniqueTaskIds.map((taskId) => ({
-                    task: { connect: { id: taskId as string } }
+                create: tasks.map((t: any) => ({
+                    quantity: t.quantity,
+                    task: {connect: { id: t.taskId }},
                 }))
             },
+           
             jobs: {
                 create: [{
                     job: {
                         connect: { id: jobIds as string }
                     }
                 }]
-            }
+            },
+            userId: (req.user as { id: string }).id
         },
         include: {
             tasks: {
@@ -38,6 +42,11 @@ async function createInvoice(req: Request, res: Response) {
 
 async function getInvoices(req: Request, res: Response) {
     const invoices = await prisma.invoice.findMany({
+        where: {
+            user: {
+                id: (req.user as { id: string }).id
+            }
+        },
         include: {
             tasks: {
                 include: {

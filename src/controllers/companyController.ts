@@ -28,7 +28,15 @@ async function createCompany(req: Request, res: Response) {
     }
 
     async function getCompanies(req: Request, res: Response) {
-        const companies = await prisma.company.findMany();
+        const companies = await prisma.company.findMany({
+            where: {
+                users: {
+                    some: {
+                        id: (req.user as { id: string }).id
+                    }
+                }
+            }
+        });
         res.json(companies);
     }
 

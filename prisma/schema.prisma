@@ -25,6 +25,7 @@ model User {
   companyId String?
   tasks     Tasks[]
   jobs    Jobs[]
+  invoice  Invoice[]
 }
 
 model Company {
@@ -75,6 +76,8 @@ model Invoice {
   dateCreated   DateTime       @default(now())
   jobs          InvoiceJobs[]
   tasks         InvoiceTasks[]
+   user         User?          @relation(fields: [userId], references: [id])
+  userId       String?
 }
 
 model JobTasks {
@@ -93,6 +96,7 @@ model InvoiceJobs {
 
   job   Jobs   @relation(fields: [jobId], references: [id])
   jobId String
+  
 
   @@id([invoiceId, jobId])
 }
@@ -103,6 +107,6 @@ model InvoiceTasks {
 
   task   Tasks  @relation(fields: [taskId], references: [id])
   taskId String
-
+quantity  Int?  @default(1)
   @@id([invoiceId, taskId])
 }
