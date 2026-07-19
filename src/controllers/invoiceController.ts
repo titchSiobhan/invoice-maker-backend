@@ -62,6 +62,11 @@ async function getInvoices(req: Request, res: Response) {
                 include: {
                     task: true
                 }
+            },
+            jobs: {
+                include: {
+                    job: true
+                }
             }
         }
     });

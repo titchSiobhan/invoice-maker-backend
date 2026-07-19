@@ -79,7 +79,7 @@ async function uploadImage(req: Request<{id: string }>, res: Response) {
     });
     res.json({ company, message: "Image uploaded successfully" });
     console.log('image uploaded');
-  console.log("FILE SAVED TO:", req.file?.path);
+ 
 
 } catch (error) {
   console.log(error);

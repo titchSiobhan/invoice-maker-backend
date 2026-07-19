@@ -114,7 +114,7 @@ async function me(req: Request, res: Response) {
 		return res.status(401).json({ message: 'no user' });
 	}
 	res.json({ user });
-	console.log('sent user');
+	
 }
 
 
