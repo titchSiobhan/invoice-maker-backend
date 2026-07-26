@@ -84,6 +84,23 @@ async function getInvoices(req: Request, res: Response) {
 }
 
 
+async function isPaid(req: Request<{ id: string }>, res: Response) {
+    const { id } = req.params;
+    const {paid, paidDate} = req.body
+
+    const invoice = await prisma.invoice.update({
+        where: {
+            id
+        },
+        data: {
+            paid: true,
+            paidDate
+
+        }
+    });
+    res.json(invoice);
+}
+
 
 async function getSingleInvoice(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params;
@@ -132,4 +149,4 @@ async function deleteInvoice(req: Request<{ id: string }>, res: Response) {
     });
     res.json({message: 'Invoice deleted successfully'});
 }
-export { createInvoice, getInvoices, getSingleInvoice, deleteInvoice };
+export { createInvoice, getInvoices, getSingleInvoice, deleteInvoice, isPaid };

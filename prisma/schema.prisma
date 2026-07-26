@@ -79,6 +79,8 @@ model Invoice {
   tasks         InvoiceTasks[]
    user         User?          @relation(fields: [userId], references: [id])
   userId       String?
+  paid  Boolean?  @default(false)
+  paidDate  DateTime?
 }
 
 model JobTasks {
