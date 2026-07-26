@@ -68,6 +68,10 @@ async function getInvoices(req: Request, res: Response) {
                     job: true
                 }
             }
+        },
+        orderBy: {
+            dateCreated: 'desc'
+
         }
     });
 
@@ -113,6 +117,10 @@ async function getSingleInvoice(req: Request<{ id: string }>, res: Response) {
 async function deleteInvoice(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params;
      await prisma.invoiceTasks.deleteMany({
+        where: 
+        {invoiceId: id}
+    })
+    await prisma.invoiceJobs.deleteMany({
         where: 
         {invoiceId: id}
     })
