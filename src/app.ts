@@ -16,7 +16,7 @@ import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-app.use("/uploads", cors(), express.static(path.join(__dirname,  "uploads")));
+app.use("/uploads", cors(), express.static(path.join(__dirname, "middleware",  "uploads")));
 app.use(cookieParser());
 
 const corsOptions = {

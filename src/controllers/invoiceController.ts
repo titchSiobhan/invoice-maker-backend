@@ -118,7 +118,8 @@ async function getSingleInvoice(req: Request<{ id: string }>, res: Response) {
                 include: {
                     job: true
                 }
-            }
+            },
+            user: true
         }
     });
 
