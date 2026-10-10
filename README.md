@@ -6,7 +6,7 @@ Designed for freelancers, contractors, and small businesses to quickly create, m
 
 ---
 
-[Invoice maker frontend](https://github.com/titchSiobhan/tracker-frontend)
+[Invoice maker frontend](https://github.com/titchSiobhan/invoice-maker-frontend)
 
 ## Features
 
